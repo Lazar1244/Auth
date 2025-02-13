@@ -14,7 +14,7 @@ interface LoginFormData {
 export default function LoginForm() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginFormData>();
   const [message, setMessage] = useState("");
-  const router = useRouter(); 
+  const router = useRouter(); // ✅ Use Next.js router for redirection
 
   const onSubmit = async (data: LoginFormData) => {
     const result = await signIn("credentials", {
@@ -27,7 +27,7 @@ export default function LoginForm() {
       setMessage("Invalid credentials");
     } else {
       setMessage("Login successful!");
-      router.push("/"); 
+      router.push("/"); // ✅ Redirect to main page
     }
   };
 

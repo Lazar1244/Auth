@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 interface LoginFormData {
   email: string;
@@ -14,7 +13,6 @@ interface LoginFormData {
 export default function LoginForm() {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginFormData>();
   const [message, setMessage] = useState("");
-  const router = useRouter(); 
 
   const onSubmit = async (data: LoginFormData) => {
     const result = await signIn("credentials", {
@@ -27,7 +25,6 @@ export default function LoginForm() {
       setMessage("Invalid credentials");
     } else {
       setMessage("Login successful!");
-      router.push("/"); 
     }
   };
 

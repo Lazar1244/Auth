@@ -1,44 +1,41 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-interface LoginFormData {
+interface RegisterFormData {
+  name: string;
   email: string;
   password: string;
 }
 
-export default function LoginForm() {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginFormData>();
+export default function RegisterForm() {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<RegisterFormData>();
   const [message, setMessage] = useState("");
-  const router = useRouter(); 
 
-  const onSubmit = async (data: LoginFormData) => {
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: data.email,
-      password: data.password,
+  const onSubmit = async (data: RegisterFormData) => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
 
-    if (result?.error) {
-      setMessage("Invalid credentials");
-    } else {
-      setMessage("Login successful!");
-      router.push("/"); 
-    }
+    const result = await res.json();
+    setMessage(result.message);
   };
 
   return (
     <div className="flex flex-col items-center">
       <Image src="/7.jpg" alt="Logo" width={100} height={100} />
-      <h2 className="text-xl font-bold">Login</h2>
+      <h2 className="text-xl font-bold">Sign Up</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+        <input {...register("name", { required: "Name is required" })} placeholder="Name" className="border p-2 m-2" />
+        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+
         <input {...register("email", { required: "Email is required" })} placeholder="Email" type="email" className="border p-2 m-2" />
         {errors.email && <p className="text-red-500">{errors.email.message}</p>}
-        
+
         <input {...register("password", { required: "Password is required", minLength: 6 })} placeholder="Password" type="password" className="border p-2 m-2" />
         {errors.password && <p className="text-red-500">Password must be at least 6 characters</p>}
 

@@ -9,7 +9,7 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/login"); 
+    redirect("/login"); // ✅ Redirects to login if not authenticated
   }
 
   return (
@@ -21,7 +21,9 @@ export default async function Home() {
 
       <div className="flex space-x-4 mt-4">
         <LogoutButton />
-        
+        <Link href="/add-login">
+          <button className="bg-green-500 p-2 text-white">Add Another Login</button>
+        </Link>
       </div>
     </div>
   );
